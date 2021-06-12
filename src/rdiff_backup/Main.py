@@ -26,6 +26,7 @@ import tempfile
 import time
 import errno
 import platform
+import traceback
 from .log import Log, LoggerError, ErrorLog
 from . import (
     Globals, Time, SetConnections, robust, rpath,
@@ -422,9 +423,17 @@ def Main(arglist):
 
 def Backup(rpin, rpout):
     """Backup, possibly incrementally, src_path to dest_path."""
+    ### review comment
+    sys.stderr.write("Zuoru: the main entry for the backup operation\n")
+    sys.stderr.write("Zuoru: " + str(rpin) + "\n")
+    sys.stderr.write("Zuoru: " + str(rpout) + "\n")
+    traceback.print_stack(file=sys.stderr)
+    ###
     global incdir
     SetConnections.BackupInitConnections(rpin.conn, rpout.conn)
+    ### check: whether both input dirs are real directory
     backup_check_dirs(rpin, rpout)
+	## prepare: prepare the data dir folder
     backup_set_rbdir(rpin, rpout)
     rpout.conn.fs_abilities.backup_set_globals(rpin, force)
     if Globals.chars_to_quote:
@@ -606,6 +615,8 @@ may need to use the --exclude option (which you might already have done)."""
 def backup_get_mirrortime():
     """Return time in seconds of previous mirror, or None if cannot"""
     incbase = Globals.rbdir.append_path(b"current_mirror")
+    ### Zuoru: get the path of the current_mirror
+    print(incbase)
     mirror_rps = restore.get_inclist(incbase)
     assert len(mirror_rps) <= 1, \
         "Found %s current_mirror rps, expected <=1" % (len(mirror_rps),)
@@ -621,6 +632,7 @@ def backup_final_init(rpout):
     if Log.verbosity > 0:
         Log.open_logfile(Globals.rbdir.append("backup.log"))
     checkdest_if_necessary(rpout)
+    ### Zuoru: get the mirror time here
     prevtime = backup_get_mirrortime()
     if prevtime >= Time.curtime:
         Log.FatalError(
