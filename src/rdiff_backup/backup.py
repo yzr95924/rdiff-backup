@@ -19,6 +19,7 @@
 """High level functions for mirroring and mirror+incrementing"""
 
 import errno
+import sys
 from . import Globals, metadata, rorpiter, TempFile, Hardlink, robust, \
     increment, rpath, log, selection, Time, Rdiff, statistics, iterfile, \
     hash, longname
@@ -26,7 +27,6 @@ from . import Globals, metadata, rorpiter, TempFile, Hardlink, robust, \
 
 def Mirror(src_rpath, dest_rpath):
     """Turn dest_rpath into a copy of src_rpath"""
-    log.Log("Zuoru: this is the start point of the first backup", 4)
     log.Log(
         "Starting mirror %s to %s" % (src_rpath.get_safepath(),
                                       dest_rpath.get_safepath()), 4)

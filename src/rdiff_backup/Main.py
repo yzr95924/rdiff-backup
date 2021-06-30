@@ -443,11 +443,13 @@ def Backup(rpin, rpout):
     backup_set_select(rpin)
     backup_warn_if_infinite_regress(rpin, rpout)
     if prevtime:
+        ### Zuoru-review: exist a mirror time
         Time.setprevtime(prevtime)
         rpout.conn.Main.backup_touch_curmirror_local(rpin, rpout)
         backup.Mirror_and_increment(rpin, rpout, incdir)
         rpout.conn.Main.backup_remove_curmirror_local()
     else:
+        ### Zuoru-review: does not have a mirror time
         backup.Mirror(rpin, rpout)
         rpout.conn.Main.backup_touch_curmirror_local(rpin, rpout)
     rpout.conn.Main.backup_close_statistics(time.time())
@@ -889,7 +891,7 @@ def restore_set_root(rpin):
                     and from_datadir[1].startswith(b'increments'))), from_datadir
         restore_index = from_datadir[2:]
     restore_root_set = 1
-    return 1
+    return 1 
 
 
 def ListIncrements(rp):

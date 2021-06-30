@@ -18,6 +18,7 @@
 # 02110-1301, USA
 """Provide time related exceptions and functions"""
 
+import sys
 import time
 import re
 import calendar
@@ -66,6 +67,7 @@ def setprevtime(timeinseconds):
     assert 0 < timeinseconds < curtime, \
         "Time %s is out of bounds" % (timeinseconds,)
     timestr = timetostring(timeinseconds)
+    sys.stderr.write("Zuoru: " + "time: " + timestr + "\n")
     for conn in Globals.connections:
         conn.Time.setprevtime_local(timeinseconds, timestr)
 
